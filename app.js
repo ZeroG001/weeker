@@ -115,10 +115,10 @@ function displayWeek(numberOfWeeks, htmlElement) {
   
 	final_text = "";
 
-  template += '<div class="weekday-container">';
+
+  template = '<div class="weekday-container">';
   template += '<label for="{{day}}"> {{label}} </label>';
   template += '<input type="checkbox" value="" id="{{day}}"; class="dateBoxes">';
-  template
   
   
   for (i in weekdays) {
@@ -184,28 +184,26 @@ document.getElementById("submit-dates").addEventListener("click", function() {
   }
 
 
-
   // Get start and end date inputs
-	startdate = document.getElementById("schedule_start_date").value;
-  enddate = document.getElementById("schedule_end_date").value;
+	entered_dates.start_date = document.getElementById("schedule_start_date").value;
+  entered_dates.end_date = document.getElementById("schedule_end_date").value;
 
 
 
-	entered_dates.start_date = startdate;
-  entered_dates.end_date = enddate;
 
-  
+  // Create Start and End Date Objects
   startDateObj = new Date(entered_dates.start_date);
   endDateObj = new Date(entered_dates.end_date);
 
-  // Verify the date order and veridy the format is correct
-
+  // Verify the date order and verify the format is correct
   // If the dates are valid and in the right order then do it
   if(verifyDates(startDateObj, endDateObj)) {
 
     number_of_weeks = calculateWeeks(startDateObj, endDateObj, DateDiff);
     displayWeek(number_of_weeks, 'weeks-container');
 
+  } else {
+    alert("we wren't able to verify the dates");
   }
   
 
