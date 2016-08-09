@@ -54,10 +54,12 @@ function verifyDateOrder( startDateObj, endDateObj ) {
 // Takes String as arguement
 // Ensure that date format mm/dd/yyyy or yyyy-mm-dd is used
 function verifyDateFormat(dateString) {
+
   match_found = false;
+
   dateFormats = [
-    /\d{1,2}\/\d{1,2}\/\d{4}/i,
-    /\d{4}\-\d{1,2}\-\d{1,2}/i
+    /^\d{1,2}\/\d{1,2}\/\d{4}$/i,
+    /^\d{4}\-\d{1,2}\-\d{1,2}$/i
   ];
 
   for (i in dateFormats) {
@@ -66,11 +68,18 @@ function verifyDateFormat(dateString) {
 
         match_found = true;
     }
-    return match_found;
   }
+
+    return match_found;
 }
 
+// Code provided from the internet (tested)
+// Checks to see if the date in mm/dd/yyyy format is an existing date
 function dateIsValid(dateString) {
+
+  // convert date string to string that can be parsed
+  dateString = new Date(dateString).toLocaleDateString();
+
   var comp = dateString.split('/');
   var m = parseInt(comp[0], 10);
   var d = parseInt(comp[1], 10);
@@ -84,6 +93,7 @@ function dateIsValid(dateString) {
 
 }
 
+// Function that does all checks on dates
 function verifyDates(startDateObj, endDateObj) {
 
   startDateString = document.getElementById("schedule_start_date").value;
@@ -119,6 +129,7 @@ function displayWeek(numberOfWeeks, htmlElement) {
   template = '<div class="weekday-container">';
   template += '<label for="{{day}}"> {{label}} </label>';
   template += '<input type="checkbox" value="" id="{{day}}"; class="dateBoxes">';
+  template += '</div>';
   
   
   for (i in weekdays) {
@@ -190,10 +201,11 @@ document.getElementById("submit-dates").addEventListener("click", function() {
 
 
 
-
   // Create Start and End Date Objects
   startDateObj = new Date(entered_dates.start_date);
   endDateObj = new Date(entered_dates.end_date);
+
+
 
   // Verify the date order and verify the format is correct
   // If the dates are valid and in the right order then do it
@@ -202,8 +214,9 @@ document.getElementById("submit-dates").addEventListener("click", function() {
     number_of_weeks = calculateWeeks(startDateObj, endDateObj, DateDiff);
     displayWeek(number_of_weeks, 'weeks-container');
 
-  } else {
-    alert("we wren't able to verify the dates");
+  } 
+  else {
+    alert("Dates are invalid");
   }
   
 
