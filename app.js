@@ -121,14 +121,14 @@ function displayWeek(numberOfWeeks, htmlElement) {
   //Clear the contents of the htmlElement
   document.getElementById(htmlElement).innerHTML = "";
 
-	weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wedesday', 'Thursday', 'Friday', 'Saturday'];
+	weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   
 	final_text = "";
 
 
-  template = '<div class="weekday-container">';
+  template = '<div class="weekday-container {{disabled?}}">';
   template += '<label for="{{day}}"> {{label}} </label>';
-  template += '<input type="checkbox" value="" id="{{day}}"; class="dateBoxes">';
+  template += '<input type="checkbox" value="{{day}}" id="{{day}}" class="dateBoxes" {{disabled?}}>';
   template += '</div>';
   
   
@@ -141,6 +141,9 @@ function displayWeek(numberOfWeeks, htmlElement) {
 
    	// Add Label Text
    	final_text = final_text.replace(/\{\{label\}\}/g, weekdays[i] );
+
+    //make in put disabled
+    final_text = final_text.replace(/\{\{disabled\?\}\}/g, "");
 
 	}
   
@@ -182,6 +185,41 @@ function calculateWeeks(startDate, endDate, dateDiff) {
 
 }
 
+function getCheckboxValues() {
+
+  checkboxClass = "dateBoxes";
+  result = [];
+
+  checkboxes = document.getElementsByClassName(checkboxClass);
+
+  for (i in checkboxes) {
+    if (checkboxes[i].checked) {
+      result.push(checkboxes[i].value);
+    }
+  }
+
+  result = result.join(",");
+
+  return result;
+
+}
+
+
+/* --------------- Testing area ------------------- */
+
+document.getElementById("get_days_button").addEventListener("click", function(){
+
+  weekText = getCheckboxValues();
+
+  document.getElementById("theweekresults").innerHTML = weekText;
+
+});
+
+
+ checkboxes = document.getElementsByClassName(checkboxClass).addEventListener("mouseup", function() {
+  alert(this.value);
+ });
+
 // -------------------- Main Action --------------------/
 
 
@@ -220,5 +258,38 @@ document.getElementById("submit-dates").addEventListener("click", function() {
   }
   
 
+  
+});
+
+function serializeArray(form) {
+      var field, l, s = [];
+      if (typeof form == 'object' && form.nodeName == "FORM") {
+          var len = form.elements.length;
+          for (i=0; i<len; i++) {
+              field = form.elements[i];
+              if (field.name && !field.disabled && field.type != 'file' && field.type != 'reset' && field.type != 'submit' && field.type != 'button') {
+                  if (field.type == 'select-multiple') {
+                      l = form.elements[i].options.length; 
+                      for (j=0; j<l; j++) {
+                          if(field.options[j].selected)
+                              s[s.length] = { name: field.name, value: field.options[j].value };
+                      }
+                  } else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+                      s[s.length] = { name: field.name, value: field.value };
+                  }
+              }
+          }
+      }
+      return s;
+}
+
+
+// Prevent the form from submitting
+document.getElementById("my-form").addEventListener('submit', function(event) {
+  console.log("hello world");
+  event.preventDefault();
+  alert("Default Prevented");
+
+  
   
 });

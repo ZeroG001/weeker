@@ -8,6 +8,27 @@
 		.week-wrap {
 			padding: 20px;
 		}
+
+		.week-wrap h3 {
+			vertical-align: top;
+			margin: 0 20px 0px 0px;
+		}
+
+		.week-wrap h3 {
+			display: inline;
+		}
+
+		.weekday-container {
+			display: inline-block;
+			width: 50px;
+
+		}
+
+		.weekday-container label {
+			display: block;
+		}
+
+
 	</style>
 	
 	<label> Enter Start Date </label>
@@ -18,13 +39,23 @@
 
 	<button id="submit-dates"> Submit Dates </button>
 
-	<div id="weeks-container"> 
+	<input type="hidden" name="days_availilble" value="">
 
 
-		<!-- Here is where all weeks will appear -->
+	<form id="my-form">
+		<div id="weeks-container"> 
 
 
-	</div>
+			<!-- Here is where all weeks will appear -->
+
+
+		</div>
+
+	</form>
+
+	<button id="get_days_button"> Get Info </button>
+
+	<div id="theweekresults"> </div>
 
 </body>
 </html>
