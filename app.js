@@ -113,6 +113,8 @@ function verifyDates(startDateObj, endDateObj) {
 
 }
 
+
+
 // Takes the number of weeks and outputs them to a specifed htmlElement ID on the page.
 function displayWeek(numberOfWeeks, htmlElement) {
 
@@ -185,6 +187,8 @@ function calculateWeeks(startDate, endDate, dateDiff) {
 
 }
 
+
+
 function getCheckboxValues() {
 
   checkboxClass = "dateBoxes";
@@ -194,7 +198,6 @@ function getCheckboxValues() {
 
   for (i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked) {
-      alert(checkboxes[i].value);
       result.push(checkboxes[i].value);
     }
   }
@@ -202,6 +205,32 @@ function getCheckboxValues() {
   result = result.join(",");
 
   return result;
+
+}
+
+
+// Disable the weekday checkboxes depending on which day the date starts on
+function disabledays(startDateObj, endDateObj) {
+
+  alert("the disable days function has started");
+
+  checkboxClass = "dateBoxes";
+
+  checkboxes = document.getElementsByClassName(checkboxClass);
+
+  startDayVal = startDateObj.getDay();
+  endDayVal = endDateObj.getDay();
+
+  for (i = 0; i < startDayVal; i++) {
+    checkboxes[i].disabled = true;
+  }
+
+  for (i = 0; i < endDayVal) {
+    "";
+  }
+
+alert("this disable days function has eneded");
+  
 
 }
 
@@ -260,6 +289,7 @@ document.getElementById("submit-dates").addEventListener("click", function() {
 
     number_of_weeks = calculateWeeks(startDateObj, endDateObj, DateDiff);
     displayWeek(number_of_weeks, 'weeks-container');
+    disabledays(startDateObj, endDateObj);
 
   } 
   else {
