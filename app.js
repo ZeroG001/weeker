@@ -192,8 +192,9 @@ function getCheckboxValues() {
 
   checkboxes = document.getElementsByClassName(checkboxClass);
 
-  for (i in checkboxes) {
+  for (i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked) {
+      alert(checkboxes[i].value);
       result.push(checkboxes[i].value);
     }
   }
@@ -210,15 +211,23 @@ function getCheckboxValues() {
 document.getElementById("get_days_button").addEventListener("click", function(){
 
   weekText = getCheckboxValues();
-
   document.getElementById("theweekresults").innerHTML = weekText;
+
+
+ // thedateboxes = document.getElementsByClassName("dateBoxes");
+ // for ( i in thedateboxes ) {
+ //  thedateboxes[i].addEventListener("mouseup", function() {
+ //    alert("you clicked it");
+ //  });
+ // }
+
 
 });
 
 
- checkboxes = document.getElementsByClassName(checkboxClass).addEventListener("mouseup", function() {
-  alert(this.value);
- });
+
+
+
 
 // -------------------- Main Action --------------------/
 
