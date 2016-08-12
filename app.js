@@ -62,6 +62,12 @@ function verifyDateFormat(dateString) {
     /^\d{4}\-\d{1,2}\-\d{1,2}$/i
   ];
 
+  // If the Day is greater than 31 then return false;
+  splitDate = dateString.split("/");
+  if (splitDate[1] > 31) {
+    return false;
+  }
+
   for (i in dateFormats) {
 
     if ( dateString.match(dateFormats[i]) ) {
@@ -81,6 +87,7 @@ function dateIsValid(dateString) {
   dateString = new Date(dateString).toLocaleDateString();
 
   var comp = dateString.split('/');
+
   var m = parseInt(comp[0], 10);
   var d = parseInt(comp[1], 10);
   var y = parseInt(comp[2], 10);
@@ -199,6 +206,8 @@ function getCheckboxValues() {
   for (i = 0; i < checkboxes.length; i++) {
     if (checkboxes[i].checked) {
       result.push(checkboxes[i].value);
+    } else {
+      result.push("");
     }
   }
 
@@ -209,10 +218,17 @@ function getCheckboxValues() {
 }
 
 
+function something() {
+
+}
+
+function trackDays() {
+
+}
+
 // Disable the weekday checkboxes depending on which day the date starts on
 function disabledays(startDateObj, endDateObj) {
 
-  alert("the disable days function has started");
 
   checkboxClass = "dateBoxes";
 
@@ -221,34 +237,35 @@ function disabledays(startDateObj, endDateObj) {
   startDayVal = startDateObj.getDay();
   endDayVal = endDateObj.getDay();
 
+
+  // Disabled Start Dates
   for (i = 0; i < startDayVal; i++) {
     checkboxes[i].disabled = true;
   }
 
-  for (i = 0; i < endDayVal) {
-    "";
+  // Disabled end dates
+  endCounter = checkboxes.length - (7 - endDayVal);
+  for (i = endCounter + 1; i < checkboxes.length; i++) {
+    checkboxes[i].disabled = true;
   }
 
-alert("this disable days function has eneded");
-  
+
+  // for( i = 0; i endDayVal i++; ) {
+  //   checkboxes[i].disabled = true;
+  // }
 
 }
 
 
 /* --------------- Testing area ------------------- */
 
-document.getElementById("get_days_button").addEventListener("click", function(){
+document.getElementById("get_days_button").addEventListener("click", function() {
 
   weekText = getCheckboxValues();
+
   document.getElementById("theweekresults").innerHTML = weekText;
 
-
- // thedateboxes = document.getElementsByClassName("dateBoxes");
- // for ( i in thedateboxes ) {
- //  thedateboxes[i].addEventListener("mouseup", function() {
- //    alert("you clicked it");
- //  });
- // }
+  thedateboxes = document.getElementsByClassName("dateBoxes");
 
 
 });
@@ -301,6 +318,7 @@ document.getElementById("submit-dates").addEventListener("click", function() {
 });
 
 function serializeArray(form) {
+
       var field, l, s = [];
       if (typeof form == 'object' && form.nodeName == "FORM") {
           var len = form.elements.length;
@@ -320,15 +338,16 @@ function serializeArray(form) {
           }
       }
       return s;
+
 }
+
 
 
 // Prevent the form from submitting
 document.getElementById("my-form").addEventListener('submit', function(event) {
+
   console.log("hello world");
   event.preventDefault();
   alert("Default Prevented");
-
-  
   
 });
