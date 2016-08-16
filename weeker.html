@@ -31,27 +31,31 @@
 
 	</style>
 	
-	<label> Enter Start Date </label>
-	<input type="text" id="schedule_start_date"> <br />
 
-	<label> Enter End Date </label>
-	<input type="text" id="schedule_end_date"> <br />
+	<form id="my-form" action="submit.php" method="POST">
 
-	<button id="submit-dates"> Submit Dates </button>
+		<label> Enter Start Date </label>
+		<input type="text" name="schedule_start_date" id="schedule_start_date"> <br />
 
-	<input type="hidden" name="days_availilble" value="">
+		<label> Enter End Date </label>
+		<input type="text" name="schedule_end_date" id="schedule_end_date"> <br />
 
+		<input type="submit" value="FINAL submit date "/>
 
-	<form id="my-form">
-		<div id="weeks-container"> 
-
-
-			<!-- Here is where all weeks will appear -->
-
-
-		</div>
+		<input type="hidden" id="days_availible" name="days_availilble" value="">
 
 	</form>
+
+
+	<div id="weeks-container"> 
+
+
+		<!-- Here is where all weeks will appear -->
+
+
+	</div>
+
+	<button id="submit-dates"> Submit Dates </button>
 
 	<button id="get_days_button"> Get Info </button>
 

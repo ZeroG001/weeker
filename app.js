@@ -137,7 +137,7 @@ function displayWeek(numberOfWeeks, htmlElement) {
 
   template = '<div class="weekday-container {{disabled?}}">';
   template += '<label for="{{day}}"> {{label}} </label>';
-  template += '<input type="checkbox" value="{{day}}" id="{{day}}" class="dateBoxes" {{disabled?}}>';
+  template += '<input type="checkbox" value="1" id="{{day}}" class="dateBoxes" {{disabled?}}>';
   template += '</div>';
   
   
@@ -195,7 +195,7 @@ function calculateWeeks(startDate, endDate, dateDiff) {
 }
 
 
-
+// Returns array instead of string
 function getCheckboxValues() {
 
   checkboxClass = "dateBoxes";
@@ -207,25 +207,41 @@ function getCheckboxValues() {
     if (checkboxes[i].checked) {
       result.push(checkboxes[i].value);
     } else {
-      result.push("");
+      result.push("0");
     }
   }
 
-  result = result.join(",");
+  // uncomment to Return result as string
+  //result = result.join(",");
 
   return result;
 
 }
 
 
-function something() {
 
+// Create a binary arry that will be used in dtabase.
+
+function createBinaryArray(arr) {
+
+  // If the array is not divisible by 7 then quit the program
+  if(arr.length % 7 != 0) {
+    alert("there is something wrong with the array");
+    return false;
+  }
+  result = [];
+  
+  for (i = 0; i < ( arr.length / 7 ); i++) {
+    weekStartIndex = i * 7;
+    weekEndIndex = weekStartIndex + 7
+    slicedarray = arr.slice(weekStartIndex, weekEndIndex);
+    binValue = parseInt(slicedarray.join(""), 2);
+    result.push(binValue);
+    
+  }
+  
+  return result;
 }
-
-function trackDays() {
-
-}
-
 // Disable the weekday checkboxes depending on which day the date starts on
 function disabledays(startDateObj, endDateObj) {
 
@@ -261,12 +277,13 @@ function disabledays(startDateObj, endDateObj) {
 
 document.getElementById("get_days_button").addEventListener("click", function() {
 
-  weekText = getCheckboxValues();
+  weekBin = getCheckboxValues();
+  binArray = createBinaryArray(weekBin);
 
+  document.getElementById("days_availible").value = weekText;
   document.getElementById("theweekresults").innerHTML = weekText;
 
-  thedateboxes = document.getElementsByClassName("dateBoxes");
-
+  // thedateboxes = document.getElementsByClassName("dateBoxes");
 
 });
 
@@ -345,9 +362,11 @@ function serializeArray(form) {
 
 // Prevent the form from submitting
 document.getElementById("my-form").addEventListener('submit', function(event) {
-
-  console.log("hello world");
+  // When I submit I want an ajax reques to go to the taget page.
   event.preventDefault();
-  alert("Default Prevented");
+  alert("You prevented the default behaviour");
+  // 1st I want to see if the target page accespt my inputs
+  console.log("hello world");
+  
   
 });
