@@ -8,6 +8,8 @@
 
 // Somewhere in here make sure that the date format is correct
 
+// Lets see if you can try to get to submit binary values.
+
 // --------------------------------------
 
 // Diff Date Object
@@ -221,7 +223,7 @@ function getCheckboxValues() {
 
 
 // Create a binary arry that will be used in dtabase.
-
+//returns a string that consists of numbers between 1 and 127. This represent the binary version of the week.
 function createBinaryArray(arr) {
 
   // If the array is not divisible by 7 then quit the program
@@ -237,10 +239,19 @@ function createBinaryArray(arr) {
     slicedarray = arr.slice(weekStartIndex, weekEndIndex);
     binValue = parseInt(slicedarray.join(""), 2);
     result.push(binValue);
-    
   }
-  
+
+  alert(result);
+
+  //uncomment this to return an array instad of a string
   return result;
+
+  // Return a string instead of an array
+  // return result.join(",");
+
+  
+  
+
 }
 // Disable the weekday checkboxes depending on which day the date starts on
 function disabledays(startDateObj, endDateObj) {
@@ -278,12 +289,16 @@ function disabledays(startDateObj, endDateObj) {
 document.getElementById("get_days_button").addEventListener("click", function() {
 
   weekBin = getCheckboxValues();
-  binArray = createBinaryArray(weekBin);
+  binText = createBinaryArray(weekBin);
 
-  document.getElementById("days_availible").value = weekText;
+  alert(binText);
+
+
+  document.getElementById("days_availible").value = binText;
   document.getElementById("theweekresults").innerHTML = weekText;
 
   // thedateboxes = document.getElementsByClassName("dateBoxes");
+
 
 });
 

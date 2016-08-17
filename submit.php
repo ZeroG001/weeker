@@ -1,5 +1,5 @@
 <?php 
-	//If the request method is post and isset post
+	//If the server mode is post then show all the items in the array
 
  echo "hello world this is a test";
 
