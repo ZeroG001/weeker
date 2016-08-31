@@ -30,24 +30,20 @@
 
 
 	</style>
-	
-
-	<form id="my-form" action="submit.php" method="POST">
-
-		<label> Enter Start Date </label>
-		<input type="text" name="schedule_start_date" id="schedule_start_date"> <br />
-
-		<label> Enter End Date </label>
-		<input type="text" name="schedule_end_date" id="schedule_end_date"> <br />
-
-		<input type="submit" value="FINAL submit date "/>
-
-		<input type="hidden" id="days_availible" name="days_availilble" value="">
-
-	</form>
 
 
-	<div id="weeks-container"> 
+	<label> Enter Start Date </label>
+	<input type="text" name="schedule_start_date" id="schedule_start_date"> <br />
+
+	<label> Enter End Date </label>
+	<input type="text" name="schedule_end_date" id="schedule_end_date"> <br />
+
+	<button id="addDate"> Test </button>
+
+
+	<input type="hidden" id="days_availible" name="days_availilble" value="">
+
+	<div id="schedule_wrap"> 
 
 
 		<!-- Here is where all weeks will appear -->
@@ -55,13 +51,9 @@
 
 	</div>
 
-	<button id="submit-dates"> Submit Dates </button>
-
-	<button id="get_days_button"> Get Info </button>
-
 	<div id="theweekresults"> </div>
 
 </body>
 </html>
 
-<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="app_two.js"> </script>
