@@ -17,6 +17,7 @@
   this.htmlContainer = [];
   // WHen you reutrn and i know that you will return. I will not be there to help you.
 
+
   // Diff Date Object
   this.DateDiff = { 
     inDays: function(d1, d2) { 
@@ -43,6 +44,8 @@
     </div>
   `;
 
+
+
   // The weekday container goes into the weeksTemplate area
   this.htmlWeekTemplate = `
     <div class='week-wrap'> 
@@ -52,16 +55,21 @@
   `;
 
 
+
   this.htmlWeekDayTemplate = `
-    <div class="weekday-container {{disabled?}}">
+    <div class="weekday-container">
       <label for="{{day}}"> {{label}} </label>
-      <input type="checkbox" value="1" id="{{day}}" class="dateBoxes" {{disabled?}}>
+      <input type="checkbox" value="1" class="dateBoxes">
     </div>
   `
 
   // If the dates are valid then show on the page 
 
   this.displaySchedule("schedule_wrap");
+
+  this.getScheduleDomElement();
+  
+
 
 }
 
@@ -178,105 +186,68 @@ Schedule.prototype.dateExists = function(first_argument) {
 
 
 
+
 //Meaning Curly Brace format, takes a string like "hello {{something}} and replaces it with "Hello World"
 function cbFormat(string, obj) {
-  for (i in obj) {
-    string = string.replace("{{"+ i +"}}", obj[i])
+
+  for (var i in obj) {
+    string = string.replace("{{"+ i +"}}", obj[i]);
   }
   return string; 
 }
 
 
+// Gets the DOM information for the schedule.
+// Grabs the DOM information from the last schedule created.
+Schedule.prototype.getScheduleDomElement = function() {
+
+  // Get get the last schedule Element
+    var lastSchedule = document.getElementsByClassName('schedule__container').length -1;
+    scheduleHTML = document.getElementsByClassName('schedule__container')[lastSchedule];
+    console.log(scheduleHTML);
+
+
+    // Assign the DOM element to the object
+}
+
+
+
 
 Schedule.prototype.displaySchedule = function( htmlElement ) {
 
-  // Possably take the startDate and End date
   // Make it so that the week number is shown above each week
 
   // Should be calculated automatically from within object
 
+  var numberOfWeeks = this.calculateWeeks(),
+  htmlContainer = document.getElementById(htmlElement),
+  weekDays= ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  finalHtml = "",
+  scheduleHtml = "",
+  weekHtml = "",
+  dayHtml = "";
 
 
-  numberOfWeeks = this.calculateWeeks();
-  htmlContainer = document.getElementById(htmlElement);
-  finalHtml = "";
 
-  // FormattingHtml
-  finalHtml += cbFormat(this.htmlScheduleTemplate, {scheduleTitle: this.startDate});
+  // Construct the HTML
 
-  weekHtml = "";
-  for ( i in this.range(numberOfWeeks) ) {
-
-    weekHtml += cbFormat( this.htmlWeekTemplate, {weekNumber: "2"} );
-    weekHtml += cbFormat ( this.innerHtml)
-    
-    if ( i == this.range(numberOfWeeks).length - 1 ) {
-      finalHtml = cbFormat(finalHtml, {weeksTemplate: weekHtml});
-      weekHtml = "";
-
+  for ( var i in this.range(numberOfWeeks) ) {
+    dayHtml = "";
+    for ( var j in this.range(7) ) {
+      dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]});
     }
-
+    weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml, "weekNumber" : parseInt(i) + 1});
   }
 
-  htmlContainer.innerHTML += finalHtml;
+  scheduleHtml = cbFormat(this.htmlScheduleTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
 
-  // You kill the light
+  finalHtml = scheduleHtml;
 
-
-
-
-
-  // Task 1 - Display a Week once clicked [ good ]
-  // Task 2 - Display the Start date as the title [  ] 
-  // Task 3 - Verify that the start date and end date are valie [ good ]
-  // Task 4 - For Each of the weeks you're going to have to display them [ good ] 
-  // Task 5 Display the Weekdays in the week. oh and also make sure they don't' fall on a bad day.
-
-
-
-
-  // Clear the contents of the htmlElement
-  
-  // htmlContainer.innerHTML = "";
-
-  // weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  
-  // final_text = "";
-
-  
-  // for (i in weekdays) {
-
-  //   // Add attributes
-  //   abbrday = weekdays[i].slice(0,3).toLowerCase();
-  //   final_text += template.replace(/\{\{day\}\}/g, abbrday );
-    
-  //   // Add Label Text
-  //   final_text = final_text.replace(/\{\{label\}\}/g, weekdays[i] );
-
-  //   //make in put disabled
-  //   final_text = final_text.replace(/\{\{disabled\?\}\}/g, "");
-
-  // }
-  
-  // // Display weeks on to the page with the container
-  // for (i = 0; i < numberOfWeeks; i++) {
-
-  //   htmlContainer.innerHTML += "<div class='week-wrap'> <h3> Week " + (i + 1) + "</h3>" + final_text;
-  //   htmlContainer.innerHTML += "<button> Delete Schedule </button>";
-  //   htmlContainer.innerHTML += "</div>";
-
-    
-  //   // Stop to prevent too many weeks from being added.
-  //   if ( i > 10 ) {
-  //     alert("too many weeks");
-  //     return final_text;
-  //   }
-
-  // }
-
-  // return final_text;
+  // Display Onto the page
+  htmlContainer.innerHTML += (finalHtml);
 
 };
+
 
 
 
@@ -378,6 +349,7 @@ Schedule.prototype.disabledays = function(startDateObj, endDateObj) {
 
   checkboxClass = "dateBoxes";
 
+  //This will soon reference ourCheckboxes
   checkboxes = document.getElementsByClassName(checkboxClass);
 
   startDayVal = startDateObj.getDay();
@@ -442,8 +414,11 @@ Schedule.prototype.verifyDates = function() {
 
 /* ------------------------ Testing Area --------------------- */
 
+// Find the schedule button
 var scheduleButton = document.getElementById("addDate");
 
+
+// Created empty array to store schedules in
 scheduleArr = [];
 
 scheduleButton.addEventListener('click',function( event ) {
@@ -455,8 +430,7 @@ scheduleButton.addEventListener('click',function( event ) {
 
 
   // Push the user object to the users array
-  scheduleArr.push( new Schedule( startDate, endDate  ) ); 
-
+  scheduleArr.push( new Schedule( startDate, endDate  ) );
 
 });
 
