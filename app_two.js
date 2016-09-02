@@ -3,6 +3,9 @@
   this.endDate = endDate;
   this.startDateObj = new Date(this.startDate);
   this.endDateObj = new Date(this.endDate);
+  this.binArray = [];
+
+  // Conc
 
   // Prevent the user from adding a date
   if(!this.verifyDates()) {
@@ -12,9 +15,8 @@
   }
 
   // DOM Information about the object. So that it could be deleted later.
-  this.weekDayArray = [];
-  this.deleteButton = [];
-  this.htmlContainer = [];
+  this.scheduleDomElement;
+  this.weekDayDomElement;
   // WHen you reutrn and i know that you will return. I will not be there to help you.
 
 
@@ -64,12 +66,11 @@
   `
 
   // If the dates are valid then show on the page 
-
+  // Init
   this.displaySchedule("schedule_wrap");
-
-  this.getScheduleDomElement();
-  
-
+  this.getScheduleDomElement('schedule__container');
+  this.getCheckboxDomElements('dateBoxes');
+  this.disabledays();
 
 }
 
@@ -199,15 +200,23 @@ function cbFormat(string, obj) {
 
 // Gets the DOM information for the schedule.
 // Grabs the DOM information from the last schedule created.
-Schedule.prototype.getScheduleDomElement = function() {
+Schedule.prototype.getScheduleDomElement = function(htmlElement) {
 
   // Get get the last schedule Element
-    var lastSchedule = document.getElementsByClassName('schedule__container').length -1;
-    scheduleHTML = document.getElementsByClassName('schedule__container')[lastSchedule];
-    console.log(scheduleHTML);
+    var lastSchedule = document.getElementsByClassName(htmlElement).length -1;
+    scheduleHTML = document.getElementsByClassName(htmlElement)[lastSchedule];
+    this.scheduleDomElement = scheduleHTML;
 
-
+    // Once you get the dom element. add it to the object
+    // I think you should create a separate function 
     // Assign the DOM element to the object
+}
+
+
+// This function has to be called after you get the schedule dom elements.
+Schedule.prototype.getCheckboxDomElements = function(htmlElement) {
+  var checkboxes = this.scheduleDomElement.getElementsByClassName(htmlElement);
+  this.weekDayDomElement = checkboxes;
 }
 
 
@@ -216,7 +225,6 @@ Schedule.prototype.getScheduleDomElement = function() {
 Schedule.prototype.displaySchedule = function( htmlElement ) {
 
   // Make it so that the week number is shown above each week
-
   // Should be calculated automatically from within object
 
   var numberOfWeeks = this.calculateWeeks(),
@@ -233,10 +241,13 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
 
   for ( var i in this.range(numberOfWeeks) ) {
     dayHtml = "";
+
     for ( var j in this.range(7) ) {
       dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]});
     }
+
     weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml, "weekNumber" : parseInt(i) + 1});
+
   }
 
   scheduleHtml = cbFormat(this.htmlScheduleTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
@@ -257,7 +268,7 @@ Schedule.prototype.calculateWeeks = function () {
   // Example if the class starts on a saturday and ends on sunday of next week
   //it will count as the dates spanning across two different weeks.
   // Get the difference in days.
-  // 
+
   dayDiff = this.DateDiff.inDays(this.startDateObj, this.endDateObj);
   weeks = 1;
   dayCounter = this.startDateObj.getDay();
@@ -272,22 +283,20 @@ Schedule.prototype.calculateWeeks = function () {
 
   }
   return weeks;
-
 }
 
 
-
+// Helper function please do not remove
 Schedule.prototype.range = function(number) {
   arry = [];
 
-  for (i = 0; i < number; i++) {
+  for ( i = 0; i < number; i++ ) {
     arry.push(i);
   }
 
   return arry;
 
 }
-
 
 
 
@@ -313,7 +322,6 @@ Schedule.prototype.getCheckboxValues = function(htmlClass) {
   return result;
 
 }
-
 
 
 
@@ -345,15 +353,15 @@ Schedule.prototype.createDateBinString = function(arr) {
 
 
 
-Schedule.prototype.disabledays = function(startDateObj, endDateObj) {
+Schedule.prototype.disabledays = function() {
 
   checkboxClass = "dateBoxes";
 
   //This will soon reference ourCheckboxes
-  checkboxes = document.getElementsByClassName(checkboxClass);
+  checkboxes = this.weekDayDomElement;
 
-  startDayVal = startDateObj.getDay();
-  endDayVal = endDateObj.getDay();
+  startDayVal = this.startDateObj.getDay();
+  endDayVal = this.endDateObj.getDay();
 
 
   // Disabled Start Dates
@@ -432,6 +440,8 @@ scheduleButton.addEventListener('click',function( event ) {
   // Push the user object to the users array
   scheduleArr.push( new Schedule( startDate, endDate  ) );
 
+
+  console.log("scheduleArr 0 .scheduleDomElement is what you're looking for");
 });
 
 
