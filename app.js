@@ -315,7 +315,7 @@ Schedule.prototype.verifyDates = function (startDateObj, endDateObj) {
 
 /* --------------- Testing area ------------------- */
 
-document.getElementById("get_days_button").addEventListener("click", function() {
+document.getElementById("addDate").addEventListener("click", function() {
 
   weekBin = getCheckboxValues();
   binText = createDateBinString(weekBin);
