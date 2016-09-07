@@ -38,11 +38,12 @@
 
   this.htmlScheduleTemplate = `
     <div class="schedule__container">
+      <div class="binarHeader"> contains binary information </div>
       <div class="schedule__title">
         <h3> {{scheduleTitle}} </h3>
       </div>
       {{weeksTemplate}}
-      <button> Delete Schedule </button>
+      <button class="delete-schedule"> Delete Schedule </button>
     </div>
   `;
 
@@ -71,6 +72,7 @@
   this.getScheduleDomElement('schedule__container');
   this.getCheckboxDomElements('dateBoxes');
   this.disabledays();
+  this.deleteSchedule();
 
 }
 
@@ -94,7 +96,20 @@ Schedule.prototype.setWeekDayArray = function() {
   this.weekDayArray = ["some", "random", "elements"];
 }
 
+Schedule.prototype.getFormInformation = function() {
+  myForm = this.scheduleDomeElement.getElementById("form");
 
+}
+
+
+Schedule.prototype.deleteSchedule = function() {
+  this.scheduleDomElement.getElementsByClassName("delete-schedule")[0].addEventListener("click", function(){
+
+    alert("You clicked the delete button");
+    alert(this.startDate);
+
+  });
+}
 
 
 Schedule.prototype.verifyDates = function(startDateObj, endDateObj) {
@@ -199,7 +214,8 @@ function cbFormat(string, obj) {
 
 
 // Gets the DOM information for the schedule.
-// Grabs the DOM information from the last schedule created.
+// Grabs the LAST schedule created
+// htmlElement is the div class that contains the schedule
 Schedule.prototype.getScheduleDomElement = function(htmlElement) {
 
   // Get get the last schedule Element
@@ -207,9 +223,6 @@ Schedule.prototype.getScheduleDomElement = function(htmlElement) {
     scheduleHTML = document.getElementsByClassName(htmlElement)[lastSchedule];
     this.scheduleDomElement = scheduleHTML;
 
-    // Once you get the dom element. add it to the object
-    // I think you should create a separate function 
-    // Assign the DOM element to the object
 }
 
 
@@ -286,6 +299,7 @@ Schedule.prototype.calculateWeeks = function () {
 }
 
 
+
 // Helper function please do not remove
 Schedule.prototype.range = function(number) {
   arry = [];
@@ -297,6 +311,7 @@ Schedule.prototype.range = function(number) {
   return arry;
 
 }
+
 
 
 
@@ -322,6 +337,27 @@ Schedule.prototype.getCheckboxValues = function(htmlClass) {
   return result;
 
 }
+
+
+
+
+Schedule.prototype.createBinaryArray = function() {
+
+  var checkboxes = this.weekDayDomElement;
+  var resultArr = [];
+
+  // Loop through array
+  looper = function(index) {
+    if(checkboxes[index]) {
+      resultArr.push(checkboxes[index].value);
+      looper(index = index + 1);
+    }
+  }
+  looper(0);
+  
+  this.binArray = resultArr;
+}
+
 
 
 
@@ -367,12 +403,14 @@ Schedule.prototype.disabledays = function() {
   // Disabled Start Dates
   for (i = 0; i < startDayVal; i++) {
     checkboxes[i].disabled = true;
+    checkboxes[i].value = 0;
   }
 
-  // Disabled end dates
+  // Disable Dates at the end of the array
   endCounter = checkboxes.length - (7 - endDayVal);
   for (i = endCounter + 1; i < checkboxes.length; i++) {
     checkboxes[i].disabled = true;
+    checkboxes[i].value = 0;
   }
 
 };
@@ -441,7 +479,7 @@ scheduleButton.addEventListener('click',function( event ) {
   scheduleArr.push( new Schedule( startDate, endDate  ) );
 
 
-  console.log("scheduleArr 0 .scheduleDomElement is what you're looking for");
+  console.log("schedule");
 });
 
 
