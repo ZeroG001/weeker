@@ -4,8 +4,7 @@
   this.startDateObj = new Date(this.startDate);
   this.endDateObj = new Date(this.endDate);
   this.binArray = [];
-
-  // Conc
+  this.updated = false;
 
   // Prevent the user from adding a date
   if(!this.verifyDates()) {
@@ -17,6 +16,7 @@
   // DOM Information about the object. So that it could be deleted later.
   this.scheduleDomElement;
   this.weekDayDomElement;
+  this.deleteButtonElement;
   // WHen you reutrn and i know that you will return. I will not be there to help you.
 
 
@@ -43,7 +43,7 @@
         <h3> {{scheduleTitle}} </h3>
       </div>
       {{weeksTemplate}}
-      <button class="delete-schedule"> Delete Schedule </button>
+      <button class="schedule__delete-button"> Delete Schedule </button>
     </div>
   `;
 
@@ -66,13 +66,16 @@
     </div>
   `
 
-  // If the dates are valid then show on the page 
-  // Init
+  // Display the Schedule
   this.displaySchedule("schedule_wrap");
+
+  // Get All information about the newly created schedule;
   this.getScheduleDomElement('schedule__container');
-  this.getCheckboxDomElements('dateBoxes');
+  this.getCheckboxDomElement('dateBoxes');
+  this.getDeleteButtonDomElement('schedule__delete-button');
   this.disabledays();
-  this.deleteSchedule();
+  this.startListening();
+  
 
 }
 
@@ -96,19 +99,47 @@ Schedule.prototype.setWeekDayArray = function() {
   this.weekDayArray = ["some", "random", "elements"];
 }
 
+
+
 Schedule.prototype.getFormInformation = function() {
   myForm = this.scheduleDomeElement.getElementById("form");
 
 }
 
 
+
+// Adds event listenters to input buttons and checkboxes
+
+Schedule.prototype.startListening = function() {
+
+  // storing object instance so that I can use it later
+  var instance = this;
+
+
+  instance.deleteButtonElement.addEventListener("click", function() {
+
+
+    // Down the line have this do a check via ajax that check if there is anyone assigned to that schedule.
+    //
+
+    // Delete the schedule from the display
+    // console.log("Schedule Deleted");
+    //instance.scheduleDomElement.innerHTML = "deleted";
+
+    // // Delete the schedule from the array
+    // instance = null; 
+
+    alert("deleted");
+
+  }); 
+ 
+
+}
+
+
 Schedule.prototype.deleteSchedule = function() {
-  this.scheduleDomElement.getElementsByClassName("delete-schedule")[0].addEventListener("click", function(){
+  //
 
-    alert("You clicked the delete button");
-    alert(this.startDate);
-
-  });
 }
 
 
@@ -218,7 +249,6 @@ function cbFormat(string, obj) {
 // htmlElement is the div class that contains the schedule
 Schedule.prototype.getScheduleDomElement = function(htmlElement) {
 
-  // Get get the last schedule Element
     var lastSchedule = document.getElementsByClassName(htmlElement).length -1;
     scheduleHTML = document.getElementsByClassName(htmlElement)[lastSchedule];
     this.scheduleDomElement = scheduleHTML;
@@ -226,10 +256,20 @@ Schedule.prototype.getScheduleDomElement = function(htmlElement) {
 }
 
 
-// This function has to be called after you get the schedule dom elements.
-Schedule.prototype.getCheckboxDomElements = function(htmlElement) {
-  var checkboxes = this.scheduleDomElement.getElementsByClassName(htmlElement);
-  this.weekDayDomElement = checkboxes;
+// Get DOM information on all buttons and checkboxes so we can act on them later.
+Schedule.prototype.getCheckboxDomElement = function(htmlElement) {
+
+  this.weekDayDomElement = this.scheduleDomElement.getElementsByClassName(htmlElement);
+
+}
+
+
+
+// Gets the first delete button from the schedule instance.
+Schedule.prototype.getDeleteButtonDomElement = function(htmlElement) {
+
+  this.deleteButtonElement = this.scheduleDomElement.getElementsByClassName(htmlElement)[0];
+
 }
 
 
@@ -258,9 +298,7 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
     for ( var j in this.range(7) ) {
       dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]});
     }
-
     weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml, "weekNumber" : parseInt(i) + 1});
-
   }
 
   scheduleHtml = cbFormat(this.htmlScheduleTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
@@ -463,8 +501,8 @@ Schedule.prototype.verifyDates = function() {
 // Find the schedule button
 var scheduleButton = document.getElementById("addDate");
 
-
-// Created empty array to store schedules in
+// Each schedule object will be stored in this array.
+// Question is how hard its going to be to present this data from the database. What about searching scehdules
 scheduleArr = [];
 
 scheduleButton.addEventListener('click',function( event ) {
@@ -478,8 +516,10 @@ scheduleButton.addEventListener('click',function( event ) {
   // Push the user object to the users array
   scheduleArr.push( new Schedule( startDate, endDate  ) );
 
+  console.log("You want scheduleArr[0]");
+  console.log("deleteSchedule");
 
-  console.log("schedule");
+  
 });
 
 
