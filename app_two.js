@@ -47,8 +47,6 @@
     </div>
   `;
 
-
-
   // The weekday container goes into the weeksTemplate area
   this.htmlWeekTemplate = `
     <div class='week-wrap'> 
@@ -112,27 +110,13 @@ Schedule.prototype.getFormInformation = function() {
 
 Schedule.prototype.startListening = function() {
 
-  // storing object instance so that I can use it later
-  var instance = this;
 
-
-  instance.deleteButtonElement.addEventListener("click", function() {
-
-
+  this.deleteButtonElement.addEventListener("click", function() {
     // Down the line have this do a check via ajax that check if there is anyone assigned to that schedule.
-    //
-
-    // Delete the schedule from the display
-    // console.log("Schedule Deleted");
-    //instance.scheduleDomElement.innerHTML = "deleted";
-
-    // // Delete the schedule from the array
-    // instance = null; 
-
     alert("deleted");
+  });
 
-  }); 
- 
+
 
 }
 
@@ -281,7 +265,6 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
   // Should be calculated automatically from within object
 
   var numberOfWeeks = this.calculateWeeks(),
-  htmlContainer = document.getElementById(htmlElement),
   weekDays= ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   finalHtml = "",
   scheduleHtml = "",
@@ -305,8 +288,7 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
 
   finalHtml = scheduleHtml;
 
-  // Display Onto the page
-  htmlContainer.innerHTML += (finalHtml);
+  document.getElementById(htmlElement).innerHTML += (finalHtml);
 
 };
 
