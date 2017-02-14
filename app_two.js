@@ -50,7 +50,6 @@
   // The weekday container goes into the weeksTemplate area
   this.htmlWeekTemplate = `
     <div class='week-wrap'> 
-      <h3> Week {{weekNumber}} </h3>
         {{weekDayTemplate}}
     </div>
   `;
@@ -265,6 +264,7 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
   // Should be calculated automatically from within object
 
   var numberOfWeeks = this.calculateWeeks(),
+  numberOfDays = this.calculateDays(),
   weekDays= ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   finalHtml = "",
   scheduleHtml = "",
@@ -280,6 +280,7 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
 
     for ( var j in this.range(7) ) {
       dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]});
+      // dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]}, "day" : "getday");
     }
     weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml, "weekNumber" : parseInt(i) + 1});
   }
