@@ -35,43 +35,72 @@
     },
   }
 
-
-  this.htmlScheduleTemplate = `
+  this.calendarTemplate = `
     <div class="schedule__container">
       <div class="binarHeader"> contains binary information </div>
       <div class="schedule__title">
         <h3> {{scheduleTitle}} </h3>
       </div>
+      <table>
       {{weeksTemplate}}
+      </table>
+      <button class="schedule__delete-button"> Delete Schedule </button>
+    </div>
+  `;
+
+ 
+  this.htmlCalendarTemplate = `
+    <div class="schedule__container">
+      <div class="binarHeader"> contains binary information </div>
+      <div class="schedule__title">
+        <h3> {{scheduleTitle}} </h3>
+      </div>
+      <table>
+        <tr>
+          <th> Sun </th>
+          <th> Mon </th>
+          <th> Tue </th>
+          <th> Wed </th>
+          <th> Thu </th>
+          <th> Fri </th>
+          <th> Sat </th>
+        </tr>
+          {{weeksTemplate}}
+
+      </table>
       <button class="schedule__delete-button"> Delete Schedule </button>
     </div>
   `;
 
   // The weekday container goes into the weeksTemplate area
   this.htmlWeekTemplate = `
-    <div class='week-wrap'> 
-        {{weekDayTemplate}}
-    </div>
+    <tr>
+      <div class='week-wrap'> 
+          {{weekDayTemplate}}
+      </div>
+    </tr>
   `;
 
 
 
   this.htmlWeekDayTemplate = `
-    <div class="weekday-container">
-      <label for="{{day}}"> {{label}} </label>
-      <input type="checkbox" value="1" class="dateBoxes">
-    </div>
-  `
+    <td>
+        <div class="weekday-container">
+          <label for="{{day}}"> {{label}} </label>
+          <input type="checkbox" value="1" class="dateBoxes">
+        </div>
+    </td>
+  `;
 
   // Display the Schedule
   this.displaySchedule("schedule_wrap");
 
   // Get All information about the newly created schedule;
-  this.getScheduleDomElement('schedule__container');
-  this.getCheckboxDomElement('dateBoxes');
-  this.getDeleteButtonDomElement('schedule__delete-button');
-  this.disabledays();
-  this.startListening();
+  // this.getScheduleDomElement('schedule__container');
+  // this.getCheckboxDomElement('dateBoxes');
+  // this.getDeleteButtonDomElement('schedule__delete-button');
+  // this.disabledays();
+  // this.startListening();
   
 
 }
@@ -115,15 +144,10 @@ Schedule.prototype.startListening = function() {
     alert("deleted");
   });
 
-
-
 }
 
 
-Schedule.prototype.deleteSchedule = function() {
-  //
-
-}
+Schedule.prototype.deleteSchedule = function() { }
 
 
 Schedule.prototype.verifyDates = function(startDateObj, endDateObj) {
@@ -258,38 +282,74 @@ Schedule.prototype.getDeleteButtonDomElement = function(htmlElement) {
 
 
 
+
+
 Schedule.prototype.displaySchedule = function( htmlElement ) {
 
   // Make it so that the week number is shown above each week
   // Should be calculated automatically from within object
 
+  // Declare the variables
   var numberOfWeeks = this.calculateWeeks(),
   numberOfDays = this.calculateDays(),
   weekDays= ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  monthArr = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
   finalHtml = "",
   scheduleHtml = "",
   weekHtml = "",
   dayHtml = "";
 
+ 
 
+  console.log("the start day is " + this.startDateObj.getDay());
+
+  var initDay = 0;
+  do {
+    console.log("the init day is" + initDay);
+    dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : "blank"}); 
+    initDay++;
+
+  } while( initDay <= this.startDateObj.getDay() );
+
+
+
+  // Do this for each day
+  for (var i in this.range(numberOfDays)) {
+
+    offsetDay = this.createDayOffsetObj(i);
+
+    if( offsetDay.getDay() == 6) {
+     weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml});
+     dayHtml = "";
+     console.log("were on the 6th day");
+    }
+
+      dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : offsetDay.getDate()}); 
+      // delete object
+      offsetDay = null;
+      
+  }
+
+  finalHtml = cbFormat(this.htmlCalendarTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
 
   // Construct the HTML
 
-  for ( var i in this.range(numberOfWeeks) ) {
-    dayHtml = "";
+  // for ( var i in this.range(numberOfWeeks) ) {
 
-    for ( var j in this.range(7) ) {
-      dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]});
-      // dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]}, "day" : "getday");
-    }
-    weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml, "weekNumber" : parseInt(i) + 1});
-  }
+  //   dayHtml = "";
 
-  scheduleHtml = cbFormat(this.htmlScheduleTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
+  //   for ( var j in this.range(7) ) {
+  //     dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]});
+  //     // dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]}, "day" : "getday");
+  //   }
+  //   weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml, "weekNumber" : parseInt(i) + 1});
+  // }
 
-  finalHtml = scheduleHtml;
+  // scheduleHtml = cbFormat(this.htmlScheduleTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
 
-  document.getElementById(htmlElement).innerHTML += (finalHtml);
+  // finalHtml = scheduleHtml;
+
+  document.getElementById(htmlElement).innerHTML += finalHtml;
 
 };
 
@@ -317,6 +377,22 @@ Schedule.prototype.calculateWeeks = function () {
 
   }
   return weeks;
+}
+
+
+
+Schedule.prototype.calculateDays = function() {
+  // return number of days
+  return this.DateDiff.inDays(this.startDateObj, this.endDateObj);
+}
+
+
+// Days is the number of days to offset by
+// This function returns a date object that is the offset of a date.
+Schedule.prototype.createDayOffsetObj = function(days) {
+  var tempDate = new Date(startDate);
+  tempDate.setDate(tempDate.getDate() + days);
+  return tempDate;
 }
 
 
@@ -358,6 +434,7 @@ Schedule.prototype.getCheckboxValues = function(htmlClass) {
   return result;
 
 }
+
 
 
 
@@ -497,7 +574,8 @@ scheduleButton.addEventListener('click',function( event ) {
 
 
   // Push the user object to the users array
-  scheduleArr.push( new Schedule( startDate, endDate  ) );
+  // scheduleArr.push( new Schedule( startDate, endDate  ) );
+  var mySchedule = new Schedule( startDate, endDate  );
 
   console.log("You want scheduleArr[0]");
   console.log("deleteSchedule");
@@ -515,7 +593,4 @@ scheduleButton.addEventListener('click',function( event ) {
 
 //
 // OK so each time the button is pressed we are going to create a new schedule object.
-// Complete with a start date and end date. I also want to verify the dates before we can do anything.
-
-
-
+// Complete with a start date and end date. I also want to verify the dates before we can do anything
