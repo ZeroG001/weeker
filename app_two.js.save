@@ -1,3 +1,6 @@
+
+
+
  function Schedule(startDate, endDate) {
   this.startDate = startDate;
   this.endDate = endDate;
@@ -35,65 +38,33 @@
     },
   }
 
-  this.calendarTemplate = `
+
+  this.htmlScheduleTemplate = `
     <div class="schedule__container">
       <div class="binarHeader"> contains binary information </div>
       <div class="schedule__title">
         <h3> {{scheduleTitle}} </h3>
       </div>
-      <table>
       {{weeksTemplate}}
-      </table>
       <button class="schedule__delete-button"> Delete Schedule </button>
-    </div>
-  `;
-
- 
-  this.htmlCalendarTemplate = `
-    <div class="schedule__container">
-      <div class="schedule__title">
-        <h3> {{scheduleTitle}} </h3>
-      </div>
-      <table>
-        <tr>
-          <th> Sun </th>
-          <th> Mon </th>
-          <th> Tue </th>
-          <th> Wed </th>
-          <th> Thu </th>
-          <th> Fri </th>
-          <th> Sat </th>
-        </tr>
-          {{weeksTemplate}}
-      </table>
     </div>
   `;
 
   // The weekday container goes into the weeksTemplate area
   this.htmlWeekTemplate = `
-    <tr>
-      {{weekDayTemplate}}
-    </tr>
+    <div class='week-wrap'> 
+        {{weekDayTemplate}}
+    </div>
   `;
 
 
 
   this.htmlWeekDayTemplate = `
-    <td>
-      <label for="{{day}}"> {{label}} 
-      <input type="checkbox" id="{{day_two}}" value="1" class="dateBoxes">
-      </label>
-    </td>
-  `;
-
-
-  this.htmlWeekDayBlankTemplate = `
-    <td>
-        <div class="weekday-container">
-          &nbsp;
-        </div>
-    </td>
-  `;
+    <div class="weekday-container">
+      <label for="{{day}}"> {{label}} </label>
+      <input type="checkbox" value="1" class="dateBoxes">
+    </div>
+  `
 
   // Display the Schedule
   this.displaySchedule("schedule_wrap");
@@ -130,12 +101,10 @@ Schedule.prototype.setWeekDayArray = function() {
 
 
 
-
 Schedule.prototype.getFormInformation = function() {
   myForm = this.scheduleDomeElement.getElementById("form");
 
 }
-
 
 
 
@@ -149,10 +118,15 @@ Schedule.prototype.startListening = function() {
     alert("deleted");
   });
 
+
+
 }
 
 
-Schedule.prototype.deleteSchedule = function() { }
+Schedule.prototype.deleteSchedule = function() {
+  //
+
+}
 
 
 Schedule.prototype.verifyDates = function(startDateObj, endDateObj) {
@@ -216,7 +190,9 @@ Schedule.prototype.verifyDateFormat = function(dateString) {
         match_found = true;
     }
   }
+
     return match_found;
+
 };
 
 
@@ -254,8 +230,6 @@ function cbFormat(string, obj) {
 }
 
 
-
-
 // Gets the DOM information for the schedule.
 // Grabs the LAST schedule created
 // htmlElement is the div class that contains the schedule
@@ -268,20 +242,23 @@ Schedule.prototype.getScheduleDomElement = function(htmlElement) {
 }
 
 
-
-
 // Get DOM information on all buttons and checkboxes so we can act on them later.
 Schedule.prototype.getCheckboxDomElement = function(htmlElement) {
-  this.weekDayDomElement = this.scheduleDomElement.getElementsByClassName(htmlElement);
-}
 
+  this.weekDayDomElement = this.scheduleDomElement.getElementsByClassName(htmlElement);
+
+}
 
 
 
 // Gets the first delete button from the schedule instance.
 Schedule.prototype.getDeleteButtonDomElement = function(htmlElement) {
+
   this.deleteButtonElement = this.scheduleDomElement.getElementsByClassName(htmlElement)[0];
+
 }
+
+
 
 
 
@@ -296,73 +273,51 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
   numberOfDays = this.calculateDays(),
   weekDays= ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   monthArr = ["January", "Febuary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-  monthAbbrArr = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
   finalHtml = "",
   scheduleHtml = "",
   weekHtml = "",
-  dayHtml = "",
-  initMonth = "";
+  dayHtml = "";
 
- 
+  offsetDay = this.createDayOffsetObj(i);
 
-  console.log("the start day is " + this.startDateObj.getDay());
-
-  var initDay = 1;
-
-  while( initDay <= this.startDateObj.getDay() ) {
+  var initDay = 0;
+  do {
     console.log("the init day is" + initDay);
-    dayHtml += cbFormat(this.htmlWeekDayBlankTemplate, {}); 
-    initDay = initDay + 1;
-  }
+    dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : "blank"}); 
+    initDay++;
 
-
-  // Do this for each day
-  for (var i in this.range(numberOfDays + 1)) {
-
-    offsetDay = this.createDayOffsetObj(i);
-
-    if(initMonth != offsetDay.getMonth()) {
-      alert("its a different month");
-      initMonth = offsetDay.getMonth();
-      finalHtml += cbFormat(this.htmlCalendarTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
-      weekHtml = "";
-      dayHtml = "";
-
-
-      var initDay = 1;
-
-      while( initDay <= offsetDay.getDay() ) {
-        console.log("the init day is" + initDay);
-        dayHtml += cbFormat(this.htmlWeekDayBlankTemplate, {}); 
-        initDay = initDay + 1;
-      }
-
-    }
-
-      dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : offsetDay.getDate(), "day" : monthAbbrArr[offsetDay.getMonth()] + offsetDay.getDate(), "day_two" : monthAbbrArr[offsetDay.getMonth()] + offsetDay.getDate()});
-
-      // delete object
-      
-      if( offsetDay.getDay() == 6) {
-          weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml});
-          dayHtml = "";
-      //  console.log("were on the 6th day");
-      }
-
-      if (i == numberOfDays) {
-          weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml});
-          dayHtml = "";
-
-
-      }
-
-      offsetDay = null;
-      
-  }
-
-  finalHtml += cbFormat(this.htmlCalendarTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
-  document.getElementById(htmlElement).innerHTML = finalHtml;
+  } while(initDay < weekDays[this.startDateObj.getDay()]);
   
+  for (var i in this.range(numberOfDays)) {
+
+      offsetDay = this.createDayOffsetObj(i);
+      
+      dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : offsetDay.getDate()}); 
+      
+      // delete object
+      offsetDay = null;
+
+      // dayHtml += format(this.htmlWeekTemplate);
+  }
+
+  // Construct the HTML
+
+  // for ( var i in this.range(numberOfWeeks) ) {
+
+  //   dayHtml = "";
+
+  //   for ( var j in this.range(7) ) {
+  //     dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]});
+  //     // dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : weekDays[j]}, "day" : "getday");
+  //   }
+  //   weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml, "weekNumber" : parseInt(i) + 1});
+  // }
+
+  // scheduleHtml = cbFormat(this.htmlScheduleTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
+
+  // finalHtml = scheduleHtml;
+
+  document.getElementById(htmlElement).innerHTML += dayHtml;
 
 };
 
@@ -400,12 +355,10 @@ Schedule.prototype.calculateDays = function() {
 }
 
 
-
 // Days is the number of days to offset by
 // This function returns a date object that is the offset of a date.
 Schedule.prototype.createDayOffsetObj = function(days) {
-  var tempDate = new Date(this.startDate);
-  days = parseInt(days);
+  var tempDate = new Date(startDate);
   tempDate.setDate(tempDate.getDate() + days);
   return tempDate;
 }
@@ -449,7 +402,6 @@ Schedule.prototype.getCheckboxValues = function(htmlClass) {
   return result;
 
 }
-
 
 
 
@@ -598,7 +550,15 @@ scheduleButton.addEventListener('click',function( event ) {
   
 });
 
+
 // When the remove button is clicke then call the remove funtion got the object you are removing.
 
+
+
+
+
+
+//
 // OK so each time the button is pressed we are going to create a new schedule object.
 // Complete with a start date and end date. I also want to verify the dates before we can do anything
+  
