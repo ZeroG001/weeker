@@ -15,9 +15,11 @@
 
   // DOM Information about the object. So that it could be deleted later.
   this.scheduleDomElement;
-  this.weekDayDomElement;
-  this.deleteButtonElement;
+  this.weekDayDomElement; // Checkboxes
+  //this.deleteButtonElement;
   // WHen you reutrn and i know that you will return. I will not be there to help you.
+
+
 
 
   // Diff Date Object
@@ -35,6 +37,9 @@
     },
   }
 
+
+  // ------------ HTML Templates ------------
+
   this.calendarTemplate = `
     <div class="schedule__container">
       <div class="binarHeader"> contains binary information </div>
@@ -47,6 +52,7 @@
       <button class="schedule__delete-button"> Delete Schedule </button>
     </div>
   `;
+
 
  
   this.htmlCalendarTemplate = `
@@ -79,16 +85,16 @@
 
 
   this.htmlWeekDayTemplate = `
-    <td>
-      <label for="{{day}}"> {{label}} 
-      <input type="checkbox" id="{{day_two}}" value="1" class="dateBoxes">
-      </label>
+    <td valign="middle">
+
+    <input type="checkbox" id="{{day_two}}" class="dateBoxes">
+      <label for="{{day}}"> {{label}} </label>
     </td>
   `;
 
 
   this.htmlWeekDayBlankTemplate = `
-    <td>
+    <td valign="middle">
         <div class="weekday-container">
           &nbsp;
         </div>
@@ -100,7 +106,9 @@
 
   // Get All information about the newly created schedule;
   // this.getScheduleDomElement('schedule__container');
-  // this.getCheckboxDomElement('dateBoxes');
+  this.getCheckboxDomElement('dateBoxes');
+  this.createBinaryArray();
+  console.log("the binary array is " + this.binary );
   // this.getDeleteButtonDomElement('schedule__delete-button');
   // this.disabledays();
   // this.startListening();
@@ -272,7 +280,7 @@ Schedule.prototype.getScheduleDomElement = function(htmlElement) {
 
 // Get DOM information on all buttons and checkboxes so we can act on them later.
 Schedule.prototype.getCheckboxDomElement = function(htmlElement) {
-  this.weekDayDomElement = this.scheduleDomElement.getElementsByClassName(htmlElement);
+  this.weekDayDomElement = document.getElementsByClassName(htmlElement);
 }
 
 
@@ -282,7 +290,6 @@ Schedule.prototype.getCheckboxDomElement = function(htmlElement) {
 Schedule.prototype.getDeleteButtonDomElement = function(htmlElement) {
   this.deleteButtonElement = this.scheduleDomElement.getElementsByClassName(htmlElement)[0];
 }
-
 
 
 
@@ -301,7 +308,7 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
   scheduleHtml = "",
   weekHtml = "",
   dayHtml = "",
-  initMonth = "";
+  initMonth = this.startDateObj.getMonth();
 
  
 
@@ -322,16 +329,21 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
     offsetDay = this.createDayOffsetObj(i);
 
     if(initMonth != offsetDay.getMonth()) {
-      alert("its a different month");
+  
+      weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml});
+      console.log("The Month is now" + monthArr[offsetDay.getMonth()]);
+      finalHtml += cbFormat(this.htmlCalendarTemplate, {"scheduleTitle": monthArr[initMonth]  + " " + offsetDay.getFullYear(),"weeksTemplate" : weekHtml});
       initMonth = offsetDay.getMonth();
-      finalHtml += cbFormat(this.htmlCalendarTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
+      
       weekHtml = "";
       dayHtml = "";
+      
 
 
       var initDay = 1;
 
       while( initDay <= offsetDay.getDay() ) {
+
         console.log("the init day is" + initDay);
         dayHtml += cbFormat(this.htmlWeekDayBlankTemplate, {}); 
         initDay = initDay + 1;
@@ -360,7 +372,8 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
       
   }
 
-  finalHtml += cbFormat(this.htmlCalendarTemplate, {"scheduleTitle": this.startDate,"weeksTemplate" : weekHtml});
+      finalHtml += cbFormat(this.htmlCalendarTemplate, {"scheduleTitle": monthArr[initMonth] + " " + this.startDateObj.getFullYear(),"weeksTemplate" : weekHtml});
+  
   document.getElementById(htmlElement).innerHTML = finalHtml;
   
 
@@ -452,8 +465,6 @@ Schedule.prototype.getCheckboxValues = function(htmlClass) {
 
 
 
-
-
 Schedule.prototype.createBinaryArray = function() {
 
   var checkboxes = this.weekDayDomElement;
@@ -490,15 +501,12 @@ Schedule.prototype.createDateBinString = function(arr) {
     binValue = parseInt(slicedarray.join(""), 2);
     result.push(binValue);
   }
-
   //uncomment this to return an array instad of a string
   //return result;
 
   //Return a string instead of an array
   return result.join(",");
-
 }
-
 
 
 
@@ -581,6 +589,9 @@ var scheduleButton = document.getElementById("addDate");
 scheduleArr = [];
 
 scheduleButton.addEventListener('click',function( event ) {
+
+  // Prevent the form from submitting
+  event.preventDefault();
   
 
   // Get the input box values
@@ -592,8 +603,6 @@ scheduleButton.addEventListener('click',function( event ) {
   // scheduleArr.push( new Schedule( startDate, endDate  ) );
   var mySchedule = new Schedule( startDate, endDate  );
 
-  console.log("You want scheduleArr[0]");
-  console.log("deleteSchedule");
 
   
 });

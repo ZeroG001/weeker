@@ -28,28 +28,110 @@
 			display: block;
 		}
 
+		.schedule__container {
+			margin-top: 40px;
+		}
+
+
+		.schedule__container table {
+			width: 100%;
+		}
+
+		.schedule__container label {
+			display: block;
+		}
+
+		.schedule__container .dateBoxes {
+			display: block;
+		}
+
+		.schedule__title h3 {
+			margin: 0px;
+			background-color: #0179C2;
+			color: white;
+			padding: 10px;
+			font-family: helvetica;
+		}
+
+		.schedule__container {
+			max-width: 500px;
+			margin: 40px auto 0px auto;
+		}
+
+
+		.schedule__container td:nth-child(2n + 1) {
+			background-color: #F5F5F5;
+		}
+
+
+
+		.schedule__container input[type="checkbox"] {
+			display: none;
+		}
+
+		.schedule__container input[type="checkbox"] + label {
+			cursor: pointer;
+			text-align: center;
+			/*padding: 10px;*/
+			box-sizing: border-box;
+			/*max-width: 50px;*/
+			margin: 0px auto;
+
+			padding: 20px;
+
+			-webkit-transition: 0.5s ease;
+			-moz-transition: 0.5s ease;
+			-o-transition: 0.5s ease;
+			transition: 0.5s ease;
+		}
+
+		.schedule__container input[type="checkbox"]:checked + label {
+
+			background-color: #01B5CC;
+			color: white;
+
+			-webkit-transition: 0.5s ease;
+			-moz-transition: 0.5s ease;
+			-o-transition: 0.5s ease;
+			transition: 0.5s ease;
+		}
+
+		/* .schedule__container input[type="checkbox"]:checked + label */
+
 	</style>
 
-	<label> Enter Start Date </label>
-	<input type="text" name="schedule_start_date" id="schedule_start_date"> <br />
+	<form>
+		<label> Enter Start Date </label>
+		<input type="text" name="schedule_start_date" id="schedule_start_date"> <br />
 
-	<label> Enter End Date </label>
-	<input type="text" name="schedule_end_date" id="schedule_end_date"> <br />
-
-	<button id="addDate"> Test </button>
-
-
-	<input type="hidden" id="days_availible" name="days_availilble" value="">
-
-	<div id="schedule_wrap"> 
+		<label> Enter End Date </label>
+		<input type="text" name="schedule_end_date" id="schedule_end_date"> <br />
 
 
-		<!-- Here is where all weeks will appear -->
+		<label for="startTime"> Start Time </label>
+		<input type="text" name="startTime" /> 
+
+		<label for="endTime"> End Time </label>
+		<input type="text" name="endTime">
+
+		<button id="addDate"> Test </button>
 
 
-	</div>
+		<div id="schedule_wrap"> 
+
+
+			<!-- Here is where all weeks will appear -->
+
+
+		</div>
+
+
+		<input type="hidden" id="days_availible" name="days_availilble" value="">
+
+	</form>
 
 	<div id="theweekresults"> </div>
+	<div id="binaryInfo"> <!-- Binary info here. --></div>
 
 </body>
 <script type="text/javascript" src="app_two.js"> </script>
