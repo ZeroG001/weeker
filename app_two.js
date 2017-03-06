@@ -6,6 +6,9 @@
   this.binArray = [];
   this.updated = false;
 
+  this.scheduleDomElement;
+  this.weekDayDomElement; 
+
   // Prevent the user from adding a date
   if(!this.verifyDates()) {
     alert("the dates aren't valid");
@@ -14,8 +17,7 @@
   }
 
   // DOM Information about the object. So that it could be deleted later.
-  this.scheduleDomElement;
-  this.weekDayDomElement; // Checkboxes
+// Checkboxes
   //this.deleteButtonElement;
   // WHen you reutrn and i know that you will return. I will not be there to help you.
 
@@ -86,8 +88,15 @@
 
   this.htmlWeekDayTemplate = `
     <td valign="middle">
+    <input type="checkbox" id="{{day_two}}" value="1" class="dateBoxes" >
+      <label for="{{day}}"> {{label}} </label>
+    </td>
+  `;
 
-    <input type="checkbox" id="{{day_two}}" class="dateBoxes">
+
+  this.htmlWeekDayTemplateSelected = `
+    <td valign="middle">
+    <input type="checkbox" id="{{day_two}}" value="1" class="dateBoxes" checked="true">
       <label for="{{day}}"> {{label}} </label>
     </td>
   `;
@@ -108,7 +117,8 @@
   // this.getScheduleDomElement('schedule__container');
   this.getCheckboxDomElement('dateBoxes');
   this.createBinaryArray();
-  console.log("the binary array is " + this.binary );
+  this.calCheckboxAction();
+  console.log("the binary array is " + this.binArray );
   // this.getDeleteButtonDomElement('schedule__delete-button');
   // this.disabledays();
   // this.startListening();
@@ -118,7 +128,29 @@
 
 // ================= Schedule Object Functions =================
 
+// Make it so the calendar elements can be changed
+// The checkboxes have to be present for it to work
+// Schedule.prototype.makeCalendarEditable = function() {
+//   for (var i = this.weekDayDomElement.length - 1; i >= 0; i--) {
 
+//     this.weekDayDomElement[i].addEventListener("click", this.createBinaryArray());
+    
+//   }
+// }
+
+
+Schedule.prototype.calCheckboxAction = function() {
+
+  for (var i = this.weekDayDomElement.length - 1; i >= 0; i--) {
+    this.weekDayDomElement[i].addEventListener("click", this.modifyDates);
+
+  }
+
+}
+
+Schedule.prototype.modifyDates = function() { 
+  // This is a te
+}
 
 // Get day of week in words from date object
 Schedule.prototype.getDateDay = function(dateObj) {
@@ -131,26 +163,20 @@ Schedule.prototype.getDateDay = function(dateObj) {
 
 
 Schedule.prototype.setWeekDayArray = function() {
-
   // This array should contain week checkboxes as an array. Should store whether the items are checked or not.
   this.weekDayArray = ["some", "random", "elements"];
 }
 
 
 
-
 Schedule.prototype.getFormInformation = function() {
   myForm = this.scheduleDomeElement.getElementById("form");
-
 }
-
-
 
 
 // Adds event listenters to input buttons and checkboxes
 
 Schedule.prototype.startListening = function() {
-
 
   this.deleteButtonElement.addEventListener("click", function() {
     // Down the line have this do a check via ajax that check if there is anyone assigned to that schedule.
@@ -203,13 +229,15 @@ Schedule.prototype.verifyDateOrder = function(startDateObj, endDateObj) {
 
 
 
+
+
 // Ensure that date format mm/dd/yyyy or yyyy-mm-dd is used
 Schedule.prototype.verifyDateFormat = function(dateString) {
 
   match_found = false;
 
   dateFormats = [
-    /^\d{1,2}\/\d{1,2}\/\d{4}$/i,
+    /^\d{0,2}\/\d{0,2}\/\d{4}$/i,
     /^\d{4}\-\d{1,2}\-\d{1,2}$/i
   ];
 
@@ -246,9 +274,8 @@ Schedule.prototype.dateExists = function(first_argument) {
   } else {
       return false;
   }
-
+  
 };
-
 
 
 
@@ -260,8 +287,6 @@ function cbFormat(string, obj) {
   }
   return string; 
 }
-
-
 
 
 // Gets the DOM information for the schedule.
@@ -276,13 +301,10 @@ Schedule.prototype.getScheduleDomElement = function(htmlElement) {
 }
 
 
-
-
 // Get DOM information on all buttons and checkboxes so we can act on them later.
 Schedule.prototype.getCheckboxDomElement = function(htmlElement) {
   this.weekDayDomElement = document.getElementsByClassName(htmlElement);
 }
-
 
 
 
@@ -317,16 +339,18 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
   var initDay = 1;
 
   while( initDay <= this.startDateObj.getDay() ) {
-    console.log("the init day is" + initDay);
     dayHtml += cbFormat(this.htmlWeekDayBlankTemplate, {}); 
     initDay = initDay + 1;
   }
 
 
+  selected_recur_days = this.getCheckboxValues("recur-day");
+
   // Do this for each day
   for (var i in this.range(numberOfDays + 1)) {
 
     offsetDay = this.createDayOffsetObj(i);
+
 
     if(initMonth != offsetDay.getMonth()) {
   
@@ -338,8 +362,6 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
       weekHtml = "";
       dayHtml = "";
       
-
-
       var initDay = 1;
 
       while( initDay <= offsetDay.getDay() ) {
@@ -351,7 +373,12 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
 
     }
 
+    if(selected_recur_days[offsetDay.getDay()] == 1) {
+      dayHtml += cbFormat(this.htmlWeekDayTemplateSelected, {"label" : offsetDay.getDate(), "day" : monthAbbrArr[offsetDay.getMonth()] + offsetDay.getDate(), "day_two" : monthAbbrArr[offsetDay.getMonth()] + offsetDay.getDate()});
+    } else {
       dayHtml += cbFormat(this.htmlWeekDayTemplate, {"label" : offsetDay.getDate(), "day" : monthAbbrArr[offsetDay.getMonth()] + offsetDay.getDate(), "day_two" : monthAbbrArr[offsetDay.getMonth()] + offsetDay.getDate()});
+      
+    }
 
       // delete object
       
@@ -364,18 +391,15 @@ Schedule.prototype.displaySchedule = function( htmlElement ) {
       if (i == numberOfDays) {
           weekHtml += cbFormat(this.htmlWeekTemplate, {"weekDayTemplate" : dayHtml});
           dayHtml = "";
-
-
       }
 
       offsetDay = null;
-      
+
   }
 
       finalHtml += cbFormat(this.htmlCalendarTemplate, {"scheduleTitle": monthArr[initMonth] + " " + this.startDateObj.getFullYear(),"weeksTemplate" : weekHtml});
   
-  document.getElementById(htmlElement).innerHTML = finalHtml;
-  
+      document.getElementById(htmlElement).innerHTML = finalHtml;
 
 };
 
@@ -427,6 +451,7 @@ Schedule.prototype.createDayOffsetObj = function(days) {
 
 // Helper function please do not remove
 Schedule.prototype.range = function(number) {
+
   arry = [];
 
   for ( i = 0; i < number; i++ ) {
@@ -436,7 +461,6 @@ Schedule.prototype.range = function(number) {
   return arry;
 
 }
-
 
 
 
@@ -465,23 +489,29 @@ Schedule.prototype.getCheckboxValues = function(htmlClass) {
 
 
 
-Schedule.prototype.createBinaryArray = function() {
+Schedule.prototype.createBinaryArray = function(checkboxes) {
 
-  var checkboxes = this.weekDayDomElement;
+  // var checkboxes = this.weekDayDomElement;
   var resultArr = [];
 
   // Loop through array
   looper = function(index) {
     if(checkboxes[index]) {
-      resultArr.push(checkboxes[index].value);
-      looper(index = index + 1);
+      if(parseInt(checkboxes[index].value) == 1 && checkboxes[index].checked) {
+        resultArr.push("1");
+        looper(index = index + 1);
+
+      } else {
+        resultArr.push("0");
+        looper(index = index + 1);
+      }
     }
   }
   looper(0);
-  
-  this.binArray = resultArr;
-}
 
+  this.binArray = resultArr;
+
+}
 
 
 
@@ -506,6 +536,7 @@ Schedule.prototype.createDateBinString = function(arr) {
 
   //Return a string instead of an array
   return result.join(",");
+
 }
 
 
@@ -579,16 +610,52 @@ Schedule.prototype.verifyDates = function() {
 };
 
 
+function createDateOffsetObj(days, startDate) {
+  var tempDate = new Date(startDate);
+  days = parseInt(days);
+  tempDate.setDate(tempDate.getDate() + days);
+  return tempDate;
+}
+
+
+function round7(x)
+{
+    return Math.ceil(x/7)*7;
+}
+
+
 /* ------------------------ Testing Area --------------------- */
 
 // Find the schedule button
 var scheduleButton = document.getElementById("addDate");
+var weekNumberInput = document.getElementById("number-of-weeks");
 
-// Each schedule object will be stored in this array.
-// Question is how hard its going to be to present this data from the database. What about searching scehdules
-scheduleArr = [];
+weekNumberInput.addEventListener("blur", function() {
 
-scheduleButton.addEventListener('click',function( event ) {
+
+  startDate = document.getElementById('schedule_start_date');
+  endDate = document.getElementById('schedule_end_date');
+
+  // Don't do anything if the start date is empty
+  if( startDate.value.trim() == "") { return false; }
+  if(weekNumberInput.value.trim() == "" || isNaN(weekNumberInput.value) ) { return false; }
+
+
+  startDateObj = new Date(startDate.value);
+  dateOffset = createDateOffsetObj(round7(parseInt(weekNumberInput.value) * 7), startDate.value);
+  
+
+  endDate.value = dateOffset.toLocaleDateString();
+
+  // When you blur then add the new date in the end date 
+
+});
+
+  // Each schedule object will be stored in this array.
+  // Question is how hard its going to be to present this data from the database. What about searching scehdules
+  scheduleArr = [];
+
+  scheduleButton.addEventListener('click',function( event ) {
 
   // Prevent the form from submitting
   event.preventDefault();
@@ -604,8 +671,10 @@ scheduleButton.addEventListener('click',function( event ) {
   var mySchedule = new Schedule( startDate, endDate  );
 
 
-  
 });
+
+
+
 
 // When the remove button is clicke then call the remove funtion got the object you are removing.
 

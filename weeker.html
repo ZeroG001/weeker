@@ -72,56 +72,126 @@
 		.schedule__container input[type="checkbox"] + label {
 			cursor: pointer;
 			text-align: center;
-			/*padding: 10px;*/
 			box-sizing: border-box;
-			/*max-width: 50px;*/
 			margin: 0px auto;
-
 			padding: 20px;
-
 			-webkit-transition: 0.5s ease;
 			-moz-transition: 0.5s ease;
 			-o-transition: 0.5s ease;
 			transition: 0.5s ease;
 		}
 
-		.schedule__container input[type="checkbox"]:checked + label {
 
+		.schedule__container input[type="checkbox"]:checked + label {
 			background-color: #01B5CC;
 			color: white;
-
 			-webkit-transition: 0.5s ease;
 			-moz-transition: 0.5s ease;
 			-o-transition: 0.5s ease;
 			transition: 0.5s ease;
+		}
+
+		.schedule-date-time-group {}
+
+		.week-days-group {
+			margin: 20px 0px;
+		}
+
+
+		.week-days-group input[type="checkbox"] {
+			display: none;
+		}
+
+
+		/* Week Day Group radio buttons */
+		.week-days-group input[type="checkbox"] + label {
+			cursor: pointer;
+			text-align: center;
+			box-sizing: border-box;
+			border: 1px solid black;
+			-webkit-transition: 0.2s ease;
+			-moz-transition: 0.2s ease;
+			-o-transition: 0.2s ease;
+			transition: 0.2s ease;
+			display: inline-block;
+			border: 1px solid black;
+			padding: 10px 15px;
+		}
+
+
+
+		.week-days-group input[type="checkbox"]:checked + label {
+			background-color: #01B5CC;
+			color: white;
+			-webkit-transition: 0.2s ease;
+			-moz-transition: 0.2s ease;
+			-o-transition: 0.2s ease;
+			transition: 0.2s ease;
 		}
 
 		/* .schedule__container input[type="checkbox"]:checked + label */
 
+
 	</style>
 
-	<form>
-		<label> Enter Start Date </label>
-		<input type="text" name="schedule_start_date" id="schedule_start_date"> <br />
+	<hr>
 
-		<label> Enter End Date </label>
-		<input type="text" name="schedule_end_date" id="schedule_end_date"> <br />
+	<h1> </h1>
+	<form class="class-schedule-form">
 
 
-		<label for="startTime"> Start Time </label>
-		<input type="text" name="startTime" /> 
+		<div class="schedule-date-time-group">
 
-		<label for="endTime"> End Time </label>
-		<input type="text" name="endTime">
 
-		<button id="addDate"> Test </button>
+
+			<label> Enter Start Date </label>
+			<input  type="text" name="schedule_start_date" class="schedule-form__field" id="schedule_start_date" placeholder="mm/dd/yyyy"> <br />
+
+			<label> Enter End Date </label>
+			<input type="text" name="schedule_end_date" class="schedule-form__field" id="schedule_end_date" placeholder="mm/dd/yyyy"> <br />
+
+
+			<label for="startTime"> Start Time </label>
+			<input type="text" name="startTime" class="schedule-form__field" />
+			<select> 
+				<option value="AM"> AM </option> 
+				<option value="PM"> PM </option>
+			</select> <br />
+
+
+			<label for="endTime"> End Time </label>
+			<input type="text" name="endTime" class="schedule-form__field">
+			<select> 
+				<option value="AM"> AM </option> 
+				<option value="PM"> PM </option>
+			</select>
+		</div>
+
+
+		<h3> Recurrence </h3>
+
+
+		<label for="number-of-weeks"> Number of Weeks </label>
+		<input type="text" id="number-of-weeks" class="schedule-form__field"> <br />
+
+		<div class="week-days-group">
+	
+			<input type="checkbox" name="recur-day" value="1" class="recur-day" id="recur-day-sun"> <label for="recur-day-sun">S</label>
+			<input type="checkbox" name="recur-day" value="1" class="recur-day" id="recur-day-mon"> <label for="recur-day-mon">M</label>
+			<input type="checkbox" name="recur-day" value="1" class="recur-day" id="recur-day-tue"> <label for="recur-day-tue">T</label>
+			<input type="checkbox" name="recur-day" value="1" class="recur-day" id="recur-day-wed"> <label for="recur-day-wed">W</label>
+			<input type="checkbox" name="recur-day" value="1" class="recur-day" id="recur-day-thu"> <label for="recur-day-thu">T</label>
+			<input type="checkbox" name="recur-day" value="1" class="recur-day" id="recur-day-fri"> <label for="recur-day-fri">F</label>
+			<input type="checkbox" name="recur-day" value="1" class="recur-day" id="recur-day-sat"> <label for="recur-day-sat">S</label>
+		</div>
+
+
+		<button id="addDate"> Go </button>
 
 
 		<div id="schedule_wrap"> 
 
-
 			<!-- Here is where all weeks will appear -->
-
 
 		</div>
 
