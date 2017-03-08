@@ -3,11 +3,12 @@
   this.endDate = endDate;
   this.startDateObj = new Date(this.startDate);
   this.endDateObj = new Date(this.endDate);
-  this.binArray = [];
+  this.binArray
   this.updated = false;
 
   this.scheduleDomElement;
   this.weekDayDomElement; 
+  this.testString = "test";
 
   // Prevent the user from adding a date
   if(!this.verifyDates()) {
@@ -116,13 +117,13 @@
   // Get All information about the newly created schedule;
   // this.getScheduleDomElement('schedule__container');
   this.getCheckboxDomElement('dateBoxes');
-  this.createBinaryArray();
-  this.calCheckboxAction();
+
+  this.createBinaryArray(this.weekDayDomElement);
+  this.calendarCheckboxAction(this);
   console.log("the binary array is " + this.binArray );
   // this.getDeleteButtonDomElement('schedule__delete-button');
   // this.disabledays();
   // this.startListening();
-  
 
 }
 
@@ -139,17 +140,24 @@
 // }
 
 
-Schedule.prototype.calCheckboxAction = function() {
+Schedule.prototype.showArray = function() {
+  alert(this.binArray);  
+}
+
+Schedule.prototype.calendarCheckboxAction = function(obj) {
 
   for (var i = this.weekDayDomElement.length - 1; i >= 0; i--) {
-    this.weekDayDomElement[i].addEventListener("click", this.modifyDates);
-
+    this.weekDayDomElement[i].addEventListener("click", function(){
+      obj.createBinaryArray(obj.weekDayDomElement);
+      console.log("the binary array is " + obj.binArray );
+    });
   }
 
 }
 
 Schedule.prototype.modifyDates = function() { 
-  // This is a te
+  // This will modify the dames
+  alert("hello");
 }
 
 // Get day of week in words from date object
@@ -491,6 +499,8 @@ Schedule.prototype.getCheckboxValues = function(htmlClass) {
 
 Schedule.prototype.createBinaryArray = function(checkboxes) {
 
+  console.log("creating array");
+
   // var checkboxes = this.weekDayDomElement;
   var resultArr = [];
 
@@ -507,6 +517,7 @@ Schedule.prototype.createBinaryArray = function(checkboxes) {
       }
     }
   }
+
   looper(0);
 
   this.binArray = resultArr;
@@ -629,6 +640,7 @@ function round7(x)
 // Find the schedule button
 var scheduleButton = document.getElementById("addDate");
 var weekNumberInput = document.getElementById("number-of-weeks");
+var courseForm = document.getElementsByClassName("class-schedule-form")[0];
 
 weekNumberInput.addEventListener("blur", function() {
 
@@ -673,10 +685,10 @@ weekNumberInput.addEventListener("blur", function() {
 
 });
 
+courseForm.addEventListener('submit', function(e){
 
+  e.preventDefault();
 
+  // Are we doing this via ajax? yes
+})
 
-// When the remove button is clicke then call the remove funtion got the object you are removing.
-
-// OK so each time the button is pressed we are going to create a new schedule object.
-// Complete with a start date and end date. I also want to verify the dates before we can do anything
